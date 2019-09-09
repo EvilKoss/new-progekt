@@ -1,5 +1,7 @@
 const ADD_POST = 'ADD-POST';
 const UPDAYYTE_NEW_POST_TEXT = 'UPDAYYTE-NEW-POST-TEXT';
+const UPDAYYTE_NEW_MESSAGE_BODY = 'UPDAYYTE-NEW-MESSAGE-BODY';
+const SEND_MESSAGE = 'SEND-MESSAGE';
 
 let store = {
     _state: {
@@ -26,7 +28,8 @@ let store = {
                 {message: 'me 2', id : 2},
                 {message: 'me 2', id : 3},
                 {message: 'me 2', id : 4}
-            ]
+            ],
+            newMessageBody: ""
         },
         sidebar: {}
     
@@ -56,6 +59,16 @@ let store = {
             this._state.profilePage.newPostText = action.newText;
             this._callSubscriber (this._state);
         }
+        else if (action.type === UPDAYYTE_NEW_MESSAGE_BODY){
+            this._state.MessagesPage.newMessageBody = action.body;
+            this._callSubscriber (this._state);
+        }
+        else if (action.type === SEND_MESSAGE){
+            let body = this._state.MessagesPage.newMessageBody;
+            this._state.MessagesPage.DialogsData.newMessageBody = '';
+            this._state.MessagesPage.MessagesData.push({message: body, id : 5});
+            this._callSubscriber(this._state);
+        }
     }
     
 }
@@ -63,6 +76,8 @@ let store = {
 export const addPostActionCreator = () =>  ({ type: ADD_POST })
 export const updayteNewPostTextActionCreator = (text) => ({ type: UPDAYYTE_NEW_POST_TEXT, newText: text })
 
+export const sendMessageCreator = () =>  ({ type: SEND_MESSAGE })
+export const updayteNewMessageBodyCreator = (body) => ({ type: UPDAYYTE_NEW_MESSAGE_BODY, body: body })
 
 
 export default store;

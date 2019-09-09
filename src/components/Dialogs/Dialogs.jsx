@@ -2,20 +2,25 @@ import React from "react";
 import style from './Dialogs.module.css';
 import Message from './Message/Message';
 import DialogItem from './DialogItem/DialogItem';
+import {updayteNewMessageBodyCreator,sendMessageCreator} from '../redux/state';
 
 
 const Dialogs = (props) => {
 
-    let dialogsElements = props.state.DialogsData.map ( dialog => <DialogItem img = {dialog.img} name = {dialog.name} id = {dialog.id} /> );
+    let state = props.store.getState().MessagesPage;
 
-    let messagesElements = props.state.MessagesData.map ( message =>  <Message message = {message.message}/> );
+    let dialogsElements = state.DialogsData.map ( dialog => <DialogItem img = {dialog.img} name = {dialog.name} id = {dialog.id} /> );
+    let messagesElements = state.MessagesData.map ( message =>  <Message message = {message.message}/> );
+    let newMessageBody = state.newMessageBody;
 
-    let newMessageElement = React.createRef();
+    let onSendMessageClick = () => {
+        props.store.dispatch(sendMessageCreator())
+    }
 
-    let sendMessage = () => {
-            let text = newMessageElement.current.value;
-            alert(text);
-        }
+    let onNewMessageChange = (e) => {
+        let body = e.target.value;
+        props.store.dispatch(updayteNewMessageBodyCreator(body));
+    }
 
     return(
         <div className={style.dialogs}>
@@ -23,13 +28,11 @@ const Dialogs = (props) => {
                 { dialogsElements }
             </div>
             <div className={style.messages}>
-                { messagesElements }
-            </div>
-            <div>
-                <textarea ref={newMessageElement}></textarea>
-            </div>
-            <div>
-                <button onClick={sendMessage}>Send</button>
+                <div>{ messagesElements }</div>
+                <div>
+                    <div><textarea value={newMessageBody} onChange={onNewMessageChange} placeholder='enter your message'></textarea></div>
+                    <div><button onClick={onSendMessageClick}>Send</button></div>
+                </div>
             </div>
         </div>
     )
