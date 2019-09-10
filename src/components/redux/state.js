@@ -1,3 +1,7 @@
+import profileReducer from './profileReducer';
+import dialogsReducer from './dialogsReducer';
+import sidebarReducer from './sidebarReducer';
+
 const ADD_POST = 'ADD-POST';
 const UPDAYYTE_NEW_POST_TEXT = 'UPDAYYTE-NEW-POST-TEXT';
 const UPDAYYTE_NEW_MESSAGE_BODY = 'UPDAYYTE-NEW-MESSAGE-BODY';
@@ -46,38 +50,17 @@ let store = {
     },
 
     dispatch (action) {
-        if (action.type === ADD_POST){
-            let newPost = {
-                id: 5,
-                message: this._state.profilePage.newPostText,
-                likesCount: 0
-            };
-            this._state.profilePage.postData.push (newPost);
-            this._state.profilePage.newPostText = "что у вас нового?";
-            this._callSubscriber (this._state);
-        }else if (action.type === UPDAYYTE_NEW_POST_TEXT){
-            this._state.profilePage.newPostText = action.newText;
-            this._callSubscriber (this._state);
-        }
-        else if (action.type === UPDAYYTE_NEW_MESSAGE_BODY){
-            this._state.MessagesPage.newMessageBody = action.body;
-            this._callSubscriber (this._state);
-        }
-        else if (action.type === SEND_MESSAGE){
-            let body = this._state.MessagesPage.newMessageBody;
-            this._state.MessagesPage.DialogsData.newMessageBody = '';
-            this._state.MessagesPage.MessagesData.push({message: body, id : 5});
-            this._callSubscriber(this._state);
-        }
+
+        this._state.profilePage = profileReducer(this._state.profilePage,action);
+        this._state.MessagesPage = dialogsReducer(this._state.MessagesPage,action);
+        this._state.sidebar = sidebarReducer(this._state.sidebar,action);
+
+        this._callSubscriber (this._state);
+
     }
     
 }
 
-export const addPostActionCreator = () =>  ({ type: ADD_POST })
-export const updayteNewPostTextActionCreator = (text) => ({ type: UPDAYYTE_NEW_POST_TEXT, newText: text })
-
-export const sendMessageCreator = () =>  ({ type: SEND_MESSAGE })
-export const updayteNewMessageBodyCreator = (body) => ({ type: UPDAYYTE_NEW_MESSAGE_BODY, body: body })
 
 
 export default store;
