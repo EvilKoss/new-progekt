@@ -7,19 +7,19 @@ import {updayteNewMessageBodyCreator,sendMessageCreator} from '../redux/dialogsR
 
 const Dialogs = (props) => {
 
-    let state = props.store.getState().MessagesPage;
+    let state = props.MessagesPage;
 
     let dialogsElements = state.DialogsData.map ( dialog => <DialogItem img = {dialog.img} name = {dialog.name} id = {dialog.id} /> );
     let messagesElements = state.MessagesData.map ( message =>  <Message message = {message.message}/> );
     let newMessageBody = state.newMessageBody;
 
     let onSendMessageClick = () => {
-        props.store.dispatch(sendMessageCreator())
+        props.sendMessage();
     }
 
     let onNewMessageChange = (e) => {
         let body = e.target.value;
-        props.store.dispatch(updayteNewMessageBodyCreator(body));
+        props.updayteNewMessageBody(body);
     }
 
     return(
